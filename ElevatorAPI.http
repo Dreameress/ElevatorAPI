@@ -1,6 +1,6 @@
 @ElevatorAPI_HostAddress = http://localhost:5288
 
-GET {{ElevatorAPI_HostAddress}}/weatherforecast/
+GET {{ElevatorAPI_HostAddress}}/elevator/
 Accept: application/json
 
 ###
