@@ -26,7 +26,7 @@ namespace ElevatorAPI.Controllers
                 return BadRequest("Request body is required.");
             }
 
-            var elevator = new ElevatorCar(1);//_service.CallElevator(request.Floor);
+            var elevator = _service.CallElevator(request.Floor);
 
             return Ok(new
             {
@@ -35,6 +35,19 @@ namespace ElevatorAPI.Controllers
             });
         }
 
+        // A person requests that they be brought to a floor
+        // POST api/v1/elevators/destination
+        [HttpPost("destination")]
+        public ActionResult RequestDestination([FromBody] RequestFloorDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request body is required.");
+            }
+
+            _service.RequestFloor(request.ElevatorId, request.DestinationFloor);
+            return Accepted();
+        }
 
         // An elevator car requests all floors that current passengers are servicing
         // GET api/v1/elevators/{id}/stops
@@ -50,6 +63,18 @@ namespace ElevatorAPI.Controllers
             });
         }
 
+        // An elevator car requests the next floor it needs to service
+        // GET api/v1/elevators/{id}/next-stop
+        [HttpGet("{elevatorId:int}/next-stop")]
+        public ActionResult<NextStopDto> GetNextStop(int elevatorId)
+        {
+            var next = _service.GetNextStop(elevatorId);
 
+            return Ok(new NextStopDto
+            {
+                ElevatorId = elevatorId,
+                NextStop = next
+            });
+        }
     }
 }

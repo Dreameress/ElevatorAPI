@@ -32,7 +32,11 @@ group.MapPost("call", (ElevatorCallRequestDto request, IElevatorService service)
     });
 });
 
-
+group.MapPost("destination", (RequestFloorDto request, IElevatorService service) =>
+{
+    service.RequestFloor(request.ElevatorId, request.DestinationFloor);
+    return Results.Accepted();
+});
 
 group.MapGet("{elevatorId:int}/stops", (int elevatorId, IElevatorService service) =>
 {
@@ -45,5 +49,15 @@ group.MapGet("{elevatorId:int}/stops", (int elevatorId, IElevatorService service
     return Results.Ok(response);
 });
 
+group.MapGet("{elevatorId:int}/next-stop", (int elevatorId, IElevatorService service) =>
+{
+    var next = service.GetNextStop(elevatorId);
+    var response = new NextStopDto
+    {
+        ElevatorId = elevatorId,
+        NextStop = next
+    };
+    return Results.Ok(response);
+});
 
 app.Run();
